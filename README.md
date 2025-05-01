@@ -27,9 +27,7 @@ Powered by CLIP, VQGAN, and Megatron‑LR, it supports a suite of pretraining an
 ```
 NUWA‑LIP/
 ├── config/            # Model configurations & dataset definitions
-│   ├─ mps4coco/       # MVLM + conditional painter
-│   ├─ lip4maskcoco/   # Lip‑based masked modeling on COCO
-│   ├─ lip4custom/     # Custom downstream tasks
+│   ├─ mps4cc          # Our Mamba based model for inpainting using the NUWA-LIP DF-VQGAN
 │   └─ dfvqgan.py      # DF‑VQGAN module & codebook interfaces
 ├── collector/         # Hooks for inference & training collectors
 ├── wutils.py          # Utilities: I/O, trainers, checkpointing, SFTP, etc.
