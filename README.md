@@ -101,4 +101,11 @@ python aim/mamba_training.py --config config/your_config.py
 ---
 
 ## 🤝 Contributions
-TODO
+- **Rouzbeh**. Focused on data preparation, preprocessing
+pipelines, and managing experiment configurations. Im-
+plemented the text conditioning and inpainting integration
+code for Mamba.
+- **Arnav**. Trained baseline DF-VQGAN and implemented
+Mamba with NUWA-LIP, ran training, and evaluated results.
+- **Mayur**. Handled codebase integration, Mamba training.
+Troubleshooting and setting up reproducibility scripts.
