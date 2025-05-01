@@ -101,16 +101,3 @@ args.epochs = 1000
 ```
 
 ---
-
-## ⭐️ Citation
-
-If you use **NUWA‑LIP** in your research, please cite:
-
-```
-@inproceedings{NUWA-LIP2023,
-  title={NUWA‑LIP: Unified Large‑scale Image-Text Pretraining},
-  author={Your Name and Collaborators},
-  year={2023},
-  booktitle={Conference/Journal}
-}
-```
