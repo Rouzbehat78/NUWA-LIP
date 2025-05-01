@@ -1,52 +1,55 @@
 
-# NUWA‑LIP 🚀  
-_A Next-Generation Framework for Language-Guided Image Inpainting and Generation_
+# AR IMAGE INPAINTING WITH GUIDED TEXT: VQ-GANS + CLIP + MAMBA
+This repository implements a two-stage, discrete-latent inpainting system:
+
+1. **Defect-Aware VQGAN**  
+   Trains a VQGAN to ignore masked regions during encoding, producing “clean” discrete tokens for known image patches.
+
+2. **Text-Conditioned Mamba AR Decoder**  
+   Adapts the Mamba state-space sequence model to autoregressively predict missing tokens given (a) CLIP ViT-B/32 text embeddings (projected + AdaLN) and (b) the surrounding decoded tokens.  
+   Classifier-free guidance is used at generation time to bias outputs toward the prompt.
+
+This design avoids iterative diffusion, focuses compute on masked areas only, and scales linearly with token sequence length—enabling faster, high-resolution inpainting.
+
+##  Key Features
+
+- **Defect-Free Tokenization**  
+  Mask-aware  DF- VQGAN encoder that zeroes out masked pixels in convolutions & attention, and normalizes over unmasked features only.
+- **Discrete-Latent Inpainting**  
+  Autoregressive filling of missing latent tokens in raster order; unmasked tokens are preserved via teacher forcing.
+- **Multimodal Conditioning**  
+  CLIP ViT-B/32 embeddings injected as a “prefix token” and via adaptive layer normalization (AdaLN) across Mamba layers.
+- **Classifier-Free Guidance**  
+  Interpolates between conditional and unconditional decoders at inference (guidance = 1.5) for stronger prompt adherence.
+- **Modular & Extensible**  
+  Swap in alternate tokenizers, conditioning methods, or AR decoders with minimal changes.
+- **Mamba Decoder Image Generation**
+  Using Mamba decoder image generation for linear sequence lenght computation complexity. Adopted from AiM pre-trained Mamba Baseline.
+
 
 ---
 
-## 🌟 Overview
-
-**NUWA‑LIP** is a cutting-edge, multi-modal framework designed for masked image-text modeling and conditional image generation.  
-It seamlessly integrates large language-vision models (like CLIP), discrete visual token models (like DF-VQGAN), and advanced transformer architectures (like Megatron-LR) to deliver high-quality, scalable, and customizable visual generation pipelines.
-
-Whether you’re working on text-conditioned inpainting, spatially masked reconstruction, or fine-tuned creative generation on custom datasets, NUWA-LIP provides an efficient, modular, and research-ready foundation.
-
----
-
-## 🔑 Core Contributions
-
-✅ **Unified Masked Image-Text Framework**  
-→ Supports both Vision-Masked Language Modeling (VMLM) and standard Masked Language Modeling (MLM).
-
-✅ **Advanced Visual Tokenization**  
-→ Uses DF‑VQGAN to discretize visual spaces, making transformer modeling over images efficient.
-
-✅ **Scalable, Modular Training**  
-→ Built-in support for single-node and distributed PyTorch DDP; easy-to-extend configs and hooks.
-
-✅ **Custom Dataset Integration**  
-→ Pre-configured pipelines for MSCOCO, Conceptual Captions, and easy extension to your own datasets.
-
-✅ **Plug-and-Play Decoder Options**  
-→ Flexible second-stage decoders (MP-S2S, Mamba, MaskGIT, etc.) for balancing quality vs. inference speed.
-
-✅ **Rich Utility Layer**  
-→ I/O, logging, checkpoints, LMDB management, SFTP syncing, and custom data handling all built-in.
-
----
-
-## 📦 Repository Structure
+## 🗂 Repository Layout
 
 ```
-NUWA-LIP/
-├── aim/                  # Mamba-based fast transformer modules
-├── collector/            # MP-S2S inference/training components
-├── config/               # Configurations for various datasets and pipelines
-├── wutils.py             # Utilities for logging, file ops, and data loading
-├── finetune.py           # Fine-tuning pipeline
-├── run.sh                # Sample shell script for execution
-├── README.md             # This file!
-└── requirements.txt      # Python dependencies
+NUWA‑LIP/
+├── aim/                          # Mamba‐related code and notebooks
+│   ├── __init__.py
+│   ├── aim.py                    # Top‐level Mamba model class
+│   ├── block.py                  # State‐space / attention blocks
+│   ├── generation.py             # AR sampling & CFG logic
+│   ├── mixer_seq_simple.py       # Simplified sequence mixer
+│   └── notebooks/
+│       └── mamba_training.ipynb  # Experiments & prototyping
+│
+├── config/            # Model configurations & dataset definitions
+│   ├─ mps4cc          # Our Mamba based model for inpainting using the NUWA-LIP DF-VQGAN
+│   └─ dfvqgan.py      # DF‑VQGAN module & codebook interfaces
+├── collector/         # Hooks for inference & training collectors
+├── wutils.py          # Utilities: I/O, trainers, checkpointing, SFTP, etc.
+├── finetune.py        # Entry point for training & evaluation
+├── run.sh             # Platform‑agnostic launch script
+└── README.md          
 ```
 
 ---
